@@ -1,7 +1,7 @@
-function [best_feature,best_threshold] = chooseAttribute(features,targets)
+function [best_feature,best_threshold] = chooseAttribute(features,targets,validFeatureNo)
     examples = [features targets];
-    maxGainInfo = -100000;
-    for i = 1 : size(features,2)
+    maxGainInfo = -inf;
+    for i = validFeatureNo
        thresholds  = features(:,i);
        for j = 1 : size(thresholds,1)
            threshold = round(thresholds(j,1)) - 1;
