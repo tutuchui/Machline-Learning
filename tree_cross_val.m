@@ -5,7 +5,9 @@ inputs = transpose(reshape(points,132,150));
 
 %generate boolean indicies for 10-fold cross validation
 indices = crossvalind('Kfold', targets,10);
-
+recall = zeros(10,1);
+precision = zeros(10, 1);
+fscore = zeros(10, 1);
 for i =1:10
     %select training and test sets for crossvalidation
     test_set = (indices == i);
