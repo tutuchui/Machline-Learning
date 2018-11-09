@@ -9,7 +9,7 @@ else
     % remove the selected feature from validFeature array
     validFeatureNo = validFeatureNo(validFeatureNo ~= best_feature);
     NodeName = ['f',num2str(best_feature),' ',num2str(best_threshold)];
-    tree = createBinaryTree(NodeName,[],[],best_feature,best_threshold);
+    tree = createBinaryTree(NodeName,[],'null',best_feature,best_threshold);
     tree.kids = cell(1,2);
     leftNodeIdx = examples(:,best_feature) >= best_threshold;
     rightNodeIdx = ~leftNodeIdx;
