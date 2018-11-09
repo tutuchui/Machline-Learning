@@ -5,7 +5,7 @@ inputs = transpose(reshape(points,132,150));
 
 %generate boolean indicies for 10-fold cross validation
 indices = crossvalind('Kfold', targets,10);
-% 
+
 for i =1:10
     %select training and test sets for crossvalidation
     test_set = (indices == i);
@@ -31,5 +31,11 @@ for i =1:10
         end
         outputs(n) = (tree.class);
     end
+    
+    %create confusion matrix and fscore
+    cmat = ConfusionMatrix(targets, outputs);
+    TP = cmat(1,1); FP = cmat(1,2); TN = cmat(2,2); FN = cat(2,1);
+    recall(i) = TP/(TP+FN);
+    precision(i) = TP/(TP+FP);
+    fscore(i) = (2*precision(i)*recall(i))/(precision(i)+recall(i));
 end
-%working on confusion matrix and f1 measure
