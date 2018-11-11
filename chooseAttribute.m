@@ -7,10 +7,15 @@ function [best_feature,best_threshold] = chooseAttribute(features,targets,validF
            threshold = round(thresholds(j,1)) - 1;
            gainInfo = calculateGainInfo(i,examples,threshold);
            if gainInfo > maxGainInfo
-               best_feature = i;
-               best_threshold = threshold;
+               candidate_feature = i;
+               candidate_threshold = threshold;
                maxGainInfo = gainInfo;
            end
        end
     end
+    best_feature = candidate_feature;
+    best_threshold = candidate_threshold;
+    disp(['f',num2str(best_feature)]);
+    disp(gainInfo);
+    
 end

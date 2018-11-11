@@ -1,1 +1,0 @@
-tree = struct('op', "", 'kids', {struct,struct}, 'class', [], 'attribute', [],'threshold', []);

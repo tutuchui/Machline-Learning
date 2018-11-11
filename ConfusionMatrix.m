@@ -1,5 +1,5 @@
 %confusion matrix function
-function [confusion_matrix, iter] = ConfusionMatrix (targets, outputs)
+function confusion_matrix = ConfusionMatrix (targets, outputs)
     values = max(targets) - min(targets) + 1;
     confusion_matrix = zeros(values);
     for i = 1:length(targets)

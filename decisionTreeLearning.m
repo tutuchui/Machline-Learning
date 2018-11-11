@@ -4,6 +4,9 @@ featureSize = size(features,2);
 if all (~(diff(labels)))
     label = labels(1,1);
     tree = createBinaryTree('Node',[],label,'null','null');
+elseif size(validFeatureNo,2) == 0
+    label = MAJORITY_VALUE(labels);
+    tree = createBinaryTree('Node',[],label,'null','null');
 else
     [best_feature,best_threshold] = chooseAttribute(features,labels,validFeatureNo);
     % remove the selected feature from validFeature array
@@ -16,7 +19,7 @@ else
     leftNode = examples(leftNodeIdx,:);
     rightNode = examples(rightNodeIdx,:);
     if(size(leftNode,1) == 0)
-        label = majorityValue(labels);
+        label = MAJORITY_VALUE(labels);
         tree.kids{1,1} = createBinaryTree('Node',[],label,'null','null');
     else
         subFeatures = leftNode(:,1:featureSize);
@@ -25,7 +28,7 @@ else
     end
     
     if(size(rightNode,1) == 0)
-        label = majorityValue(labels);
+        label = MAJORITY_VALUE(labels);
         tree.kids{1,2} = createBinaryTree('Node',[],label,'null','null');
     else     
         subFeatures = rightNode(:,1:featureSize);
