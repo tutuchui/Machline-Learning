@@ -14,8 +14,5 @@ function [best_feature,best_threshold] = chooseAttribute(features,targets,validF
        end
     end
     best_feature = candidate_feature;
-    best_threshold = candidate_threshold;
-    disp(['f',num2str(best_feature)]);
-    disp(gainInfo);
-    
+    best_threshold = candidate_threshold;   
 end
