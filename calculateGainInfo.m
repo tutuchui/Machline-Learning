@@ -1,5 +1,7 @@
 function gainInfo = calculateGainInfo(featureNo,examples,threshold)
-    e1 = examples(:,featureNo) > threshold;
+%Function calculateGainInfo return the gainInfo by using the selected
+%featureNo and threshold
+    e1 = examples(:,featureNo) >= threshold;
     e2 = ~e1;
     E1 = examples(e1,:);
     E2 = examples(e2,:);

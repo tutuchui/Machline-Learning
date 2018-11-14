@@ -1,5 +1,5 @@
 function [Majority] = MAJORITY_VALUE(targets)
-%UNTITLED3 Returns the majority value in target array
+%MAJORITY_VALUE Returns the majority value in target array
 MajNum = 0;
 MajLabel = [];
 for i = 1 : size(targets,1)

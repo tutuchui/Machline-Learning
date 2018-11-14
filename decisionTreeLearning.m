@@ -13,19 +13,21 @@ elseif size(validFeatureNo,2) == 0
     tree = createBinaryTree('Node',[],label,'null','null',label);
 else
     [best_feature,best_threshold] = chooseAttribute(features,labels,validFeatureNo);
-% remove the selected feature from validFeature array
+    %remove the selected feature from validFeature array. In ID3 algorithm,
+    %once a feature is selected, it can't be selected again in its subtree.
     validFeatureNo = validFeatureNo(validFeatureNo ~= best_feature);
     NodeName = ['f',num2str(best_feature),' ',num2str(best_threshold)];
-    %
     majorityValue = MAJORITY_VALUE(labels);
     tree = createBinaryTree(NodeName,[],'null',best_feature,best_threshold,majorityValue);
     tree.kids = cell(1,2);
+    % the feature greater or equal than the threshold goes to the left
+    % child node, or otherwise goes to the right child node
     leftNodeIdx = examples(:,best_feature) >= best_threshold;
     rightNodeIdx = ~leftNodeIdx;
     leftNode = examples(leftNodeIdx,:);
     rightNode = examples(rightNodeIdx,:);
-% if the size of example is 0, then create a leaf node with the label is
-% assigned by the majortiy value of the parent node. 
+    % if the size of example is 0, then create a leaf node with the label is
+    % assigned by the majortiy value of the parent node. 
     if(size(leftNode,1) == 0)
         label = MAJORITY_VALUE(labels);
         tree.kids{1,1} = createBinaryTree('Node',[],label,'null','null',label);
