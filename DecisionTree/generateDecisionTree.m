@@ -8,3 +8,4 @@ targets = labels;
 %Initial the valid feature set
 validFeatureNo = 1 : size(features,2);
 decisionTree = decisionTreeLearning(features,targets,validFeatureNo);
+DrawDecisionTree(decisionTree,'Decision Tree');

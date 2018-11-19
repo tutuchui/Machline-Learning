@@ -23,7 +23,6 @@ for i =1:10
     tree = decisionTreeLearning(train_inputs, train_targets,validFeatureNo);
     
     %feed the test data through the tree
-   
     [cmat,recall,precision,fscore,missclassifiedNode] = evaluateDecisionTree(test_inputs,test_targets,tree);
     
     %create confusion matrix and fscorei
