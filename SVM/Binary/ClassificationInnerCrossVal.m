@@ -26,13 +26,15 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                 end
                 aveLoss = totalLoss / 10;
                 if aveLoss < minLoss
-                        minLoss = L;
+                        minLoss = aveLoss;
                         bestC = C;
                         bestSigma = sigma;
+                        disp(['C:',num2str(bestC),' sigma:',num2str(bestSigma)]);
                 end
-            end
-            bestQ = 'null';
+            end   
         end
+        bestQ = 'null';
+        
     elseif(strcmp(kernelName,'polynomial'))
         minLoss = inf;
         GridPoly = 1 : 1 : 10;
@@ -54,9 +56,10 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                 end
                 aveLoss = totalLoss / 10;
                 if aveLoss < minLoss
-                    minLoss = L;
+                    minLoss = aveLoss;
                     bestC = C;
                     bestQ = q;
+                    disp(['C:',num2str(bestC),' q:',num2str(bestQ)]);
                 end
             end
         end

@@ -30,10 +30,11 @@ if(strcmp(kernelName,'RBF'))
                 %If the average mean squre error less than current minimal
                 %mean squre error.
                 if aveRSE < minLoss
-                    minLoss = L;
+                    minLoss = aveRSE;
                     bestC = C;
                     bestSigma = sigma;
                     bestEpsilon = epsilon;
+                    disp(['C:',num2str(bestC),' sigma:',num2str(bestSigma)]);
                 end
             end
         end
@@ -61,10 +62,11 @@ elseif(strcmp(kernelName,'polynomial'))
                 end
                 aveRSE = totalRSE / 10;
                 if aveRSE < minLoss
-                    minLoss = L;
+                    minLoss = aveRSE;
                     bestC = C;
                     bestQ = q;
                     bestEpsilon = epsilon;
+                    
                 end
             end
         end
