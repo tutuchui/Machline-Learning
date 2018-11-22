@@ -1,7 +1,10 @@
 function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,kernelName)
+    %Split the data into 10 fold. 
     indices = crossvalind('Kfold',labels,10);
-    % if the kernelFunction is RBF. 
+    % Set a search range for the BoxConstraint
+    % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2.
     GridC = 2.^(-5:0.5:10);
+    % if the kernelFunction is RBF. 
     if(strcmp(kernelName,'RBF'))
         GridSigma = 1e-3 : 0.1 : 30;
         minLoss = inf;
@@ -16,6 +19,8 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                     train_inputs = inputs(train_set,:);
                     train_labels = labels(train_set,:);
                     svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','RBF','BoxConstraint',C,'KernelScale',sigma);
+                    %Calculate the classification loss for the trained
+                    %model
                     L = loss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
@@ -42,6 +47,8 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                     train_inputs = inputs(train_set,:);
                     train_labels = labels(train_set,:);
                     svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','polynomial','BoxConstraint',C,'PolynomialOrder',q);
+                    %Calculate the classification loss for the trained
+                    %model
                     L = loss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
