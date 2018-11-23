@@ -4,7 +4,7 @@ indices = crossvalind('Kfold',labels,3);
 % Set a search range for the BoxConstraint and Epsilon
 % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2.
 % The range of Epsilon is 0.1 to 2, step is 0.1.
-GridC = 2.^(-5:0.5:10);
+GridC = 2.^(-5:1:10);
 GridEpsilon = 0.1 : 0.2 : 2;
 GridSigma = 1e-3 : 2 : 30;
 GridPoly = 1 : 1 : 6;
