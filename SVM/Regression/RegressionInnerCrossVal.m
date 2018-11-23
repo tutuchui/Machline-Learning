@@ -5,10 +5,10 @@ indices = crossvalind('Kfold',labels,10);
 % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2.
 % The range of Epsilon is 0.1 to 2, step is 0.1.
 GridC = 2.^(-5:0.5:10);
-GridEpsilon = 0.1 : 0.1 : 3;
+GridEpsilon = 0.1 : 0.2 : 2;
 % if the kernelFunction is RBF.
 if(strcmp(kernelName,'RBF'))
-    GridSigma = 1e-3 : 0.1 : 30;
+    GridSigma = 1e-3 : 2 : 30;
     minLoss = inf;
     for epsilon = GridEpsilon
         for sigma = GridSigma
@@ -44,7 +44,7 @@ if(strcmp(kernelName,'RBF'))
 elseif(strcmp(kernelName,'polynomial'))
     minLoss = inf;
 %Set the for the polynomial order, which is 1 to 10, step is 1.
-    GridPoly = 1 : 1 : 10;
+    GridPoly = 1 : 1 : 6;
     for epsilon = GridEpsilon
         for q = GridPoly
             for C = GridC
