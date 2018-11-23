@@ -4,7 +4,7 @@ load('labels.mat');
 points = reshape(points,132,150);
 X = points';
 Y = labels;
-Mdl = fitcsvm(X,Y,'KernelFunction','linear','BoxConstraint',1);
+% Mdl = fitcsvm(X,Y,'KernelFunction','linear','BoxConstraint',1);
 
 indices = crossvalind('Kfold',Y,10);
 foldSize = size(X,1) / 10;
@@ -18,10 +18,11 @@ for i = 1 : 10
     train_X = X(train_set,:);
     train_Y = Y(train_set,:);
     
-    Mdl = fitcsvm(train_X,train_Y,'KernelFunction','linear','BoxConstraint',1);
+    Mdl = fitcsvm(train_X,train_Y,'KernelFunction','RBF','BoxConstraint',2,'KernelScale',0.01);
     for j = 1 : foldSize
         [predict_Y(j,i),score] = predict(Mdl,test_X(j,:));
     end
+    Loss = ClassificationLoss(Mdl,test_X,test_Y);
    
     accuracy(i,1) = (foldSize - sum(xor(predict_Y(:,i),test_Y))) / foldSize;
 end

@@ -4,11 +4,15 @@ points = reshape(points,132,8955);
 X = points';
 Y = pose(:,6);
 
-%Trian the model using Gussian kernel
-% [bestC,bestSigma,~,bestEpsilon] = RegressionInnerCrossVal(X,Y,'RBF');
-% rbfModel = fitrsvm(X,Y,'KernelFunction','RBF','BoxConstraint',bestC,'KernelScale',bestSigma,'epsilon',bestEpsilon);
-% rbf_a = size(rbfModel.SupportVectors,1) / size(Y,1);
+% Trian the model using Gussian kernel
+bestC_rbf = RegressionInnerCrossVal(X,Y,'RBF','BoxConstraint');
+bestSigma = RegressionInnerCrossVal(X,Y,'RBF','KernelScale');
+bestEpsilon_rbf = RegressionInnerCrossVal(X,Y,'RBF','Epsilon');
 
-[bestC,~,bestQ,bestEpsilon] = RegressionInnerCrossVal(X,Y,'polynomial');
-polyModel = fitrsvm(X,Y,'KernelFunction','polynomial','BoxConstraint',bestC,'PolynomialOrder',bestQ,'epsilon',bestEpsilon);
-poly_a = size(polyModel.SupportVectors,1) / size(Y,1);
+rbfModel = fitrsvm(X,Y,'KernelFunction','RBF','BoxConstraint',bestC_rbf,'KernelScale',bestSigma,'epsilon',bestEpsilon_rbf);
+rbf_a = size(rbfModel.SupportVectors,1) / size(Y,1);
+
+bestC_poly = RegressionInnerCrossVal(X,Y,'polynomial','BoxConstraint');
+bestQ = RegressionInnerCrossVal(X,Y,'polynomial','PolynomialOrder');
+bestEpsilon_poly = RegressionInnerCrossVal(X,Y,'polynomial','Epsilon');
+polyModel = fitrsvm(X,Y,'KernelFunction','polynomial','BoxConstraint',bestC_poly,'PolynomialOrder',bestQ,'epsilon',bestEpsilon_poly);
