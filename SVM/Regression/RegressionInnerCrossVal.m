@@ -1,5 +1,5 @@
 function [bestC,bestSigma,bestQ,bestEpsilon] = RegressionInnerCrossVal(inputs,labels,kernelName)
-indices = crossvalind('Kfold',labels,10);
+indices = crossvalind('Kfold',labels,5);
 
 % Set a search range for the BoxConstraint and Epsilon
 % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2.
@@ -14,7 +14,7 @@ if(strcmp(kernelName,'RBF'))
         for sigma = GridSigma
             for C = GridC
                 totalRSE = 0;
-                for i = 1 : 10
+                for i = 1 : 5
                     test_set = (indices == i);
                     train_set = ~test_set;
                     test_inputs = inputs(test_set,:);
@@ -26,7 +26,7 @@ if(strcmp(kernelName,'RBF'))
                     RSE = loss(svmMdl,test_inputs,test_labels);
                     totalRSE = totalRSE + RSE;
                 end
-                aveRSE = totalRSE / 10;
+                aveRSE = totalRSE / 5;
                 %If the average mean squre error less than current minimal
                 %mean squre error.
                 if aveRSE < minLoss
@@ -34,7 +34,7 @@ if(strcmp(kernelName,'RBF'))
                     bestC = C;
                     bestSigma = sigma;
                     bestEpsilon = epsilon;
-                    disp(['C:',num2str(bestC),' sigma:',num2str(bestSigma)]);
+                    disp(['C:',num2str(bestC),' sigma:',num2str(bestSigma),' bestEpsilon:',num2str(bestEpsilon)]);
                 end
             end
         end
@@ -49,7 +49,7 @@ elseif(strcmp(kernelName,'polynomial'))
         for q = GridPoly
             for C = GridC
                 totalRSE = 0;
-                for i = 1 : 10
+                for i = 1 : 5
                     test_set = (indices == i);
                     train_set = ~test_set;
                     test_inputs = inputs(test_set,:);
@@ -60,13 +60,13 @@ elseif(strcmp(kernelName,'polynomial'))
                     RSE = loss(svmMdl,test_inputs,test_labels);
                     totalRSE = totalRSE + RSE;
                 end
-                aveRSE = totalRSE / 10;
+                aveRSE = totalRSE / 5;
                 if aveRSE < minLoss
                     minLoss = aveRSE;
                     bestC = C;
                     bestQ = q;
                     bestEpsilon = epsilon;
-                    
+                    disp(['C:',num2str(bestC),' bestQ:',num2str(bestQ),' bestEpsilon:',num2str(bestEpsilon)]);
                 end
             end
         end
