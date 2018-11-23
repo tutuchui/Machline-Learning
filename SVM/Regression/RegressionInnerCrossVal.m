@@ -13,7 +13,7 @@ if(strcmp(kernelName,'RBF'))
     for epsilon = GridEpsilon
         for sigma = GridSigma
             for C = GridC
-                totalRSE = 0;
+                totalMSE = 0;
                 for i = 1 : 5
                     test_set = (indices == i);
                     train_set = ~test_set;
@@ -23,14 +23,14 @@ if(strcmp(kernelName,'RBF'))
                     train_labels = labels(train_set,:);
                     svmMdl = fitrsvm(train_inputs,train_labels,'kernelFunction','RBF','Epsilon',epsilon,'BoxConstraint',C,'KernelScale',sigma);
                     % Calculate the mean square error for the model.
-                    RSE = loss(svmMdl,test_inputs,test_labels);
-                    totalRSE = totalRSE + RSE;
+                    MSE = MeanSqureError(svmMdl,test_inputs,test_labels);
+                    totalMSE = totalMSE + MSE;
                 end
-                aveRSE = totalRSE / 5;
+                aveMSE = totalMSE / 5;
                 %If the average mean squre error less than current minimal
                 %mean squre error.
-                if aveRSE < minLoss
-                    minLoss = aveRSE;
+                if aveMSE < minLoss
+                    minLoss = aveMSE;
                     bestC = C;
                     bestSigma = sigma;
                     bestEpsilon = epsilon;
@@ -48,7 +48,7 @@ elseif(strcmp(kernelName,'polynomial'))
     for epsilon = GridEpsilon
         for q = GridPoly
             for C = GridC
-                totalRSE = 0;
+                totalMSE = 0;
                 for i = 1 : 5
                     test_set = (indices == i);
                     train_set = ~test_set;
@@ -57,12 +57,12 @@ elseif(strcmp(kernelName,'polynomial'))
                     train_inputs = inputs(train_set,:);
                     train_labels = labels(train_set,:);
                     svmMdl = fitrsvm(train_inputs,train_labels,'KernelFunction','polynomial','BoxConstraint',C,'PolynomialOrder',q,'Epsilon',epsilon);
-                    RSE = loss(svmMdl,test_inputs,test_labels);
-                    totalRSE = totalRSE + RSE;
+                    MSE = MeanSqureError(svmMdl,test_inputs,test_labels);
+                    totalMSE = totalMSE + MSE;
                 end
-                aveRSE = totalRSE / 5;
-                if aveRSE < minLoss
-                    minLoss = aveRSE;
+                aveMSE = totalMSE / 5;
+                if aveMSE < minLoss
+                    minLoss = aveMSE;
                     bestC = C;
                     bestQ = q;
                     bestEpsilon = epsilon;

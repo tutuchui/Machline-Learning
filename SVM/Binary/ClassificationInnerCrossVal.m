@@ -21,7 +21,7 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                     svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','RBF','BoxConstraint',C,'KernelScale',sigma);
                     %Calculate the classification loss for the trained
                     %model
-                    L = loss(svmMdl,test_inputs,test_labels);
+                    L = ClassificationLoss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 10;
@@ -51,7 +51,7 @@ function [bestC,bestSigma,bestQ] = ClassificationInnerCrossVal(inputs,labels,ker
                     svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','polynomial','BoxConstraint',C,'PolynomialOrder',q);
                     %Calculate the classification loss for the trained
                     %model
-                    L = loss(svmMdl,test_inputs,test_labels);
+                    L = ClassificationLoss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 10;
