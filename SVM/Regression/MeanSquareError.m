@@ -6,5 +6,5 @@ for i = 1 : dataSize
     squareError(i,:) = (predict_labels - test_outputs(i,:))^2;
 end
 MSE = sum(squareError)/dataSize;
-
+MSE = sqrt(MSE);
 end

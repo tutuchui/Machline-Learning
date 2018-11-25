@@ -2,10 +2,10 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
     %Split the data into 10 fold. 
     indices = crossvalind('Kfold',labels,3);
     % Set a search range for the BoxConstraint
-    % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2.
-    GridC = 2.^(-5:0.5:10);
-    GridSigma = 1e-3 : 0.1 : 30;
-    GridPoly = 1 : 1 : 10;
+    % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2    
+    GridC = 1e-3 : 100 : 500 + 1e-3;
+    GridSigma = 1e-3 : 10 : 100;
+    GridPoly = 1 : 1 : 10;  
     % if the kernelFunction is RBF. 
     if(strcmp(kernelName,'RBF'))
         minLoss = inf;
@@ -19,17 +19,17 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
                     test_labels = labels(test_set,:);
                     train_inputs = inputs(train_set,:);
                     train_labels = labels(train_set,:);
-                    svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','RBF','BoxConstraint',C);
+                    svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','RBF','BoxConstraint',C,'KernelScale',40);
                     %Calculate the classification loss for the trained
                     %model
                     L = ClassificationLoss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 3;
+                disp(['C:',num2str(C),' Loss:',num2str(aveLoss)]);
                 if aveLoss < minLoss
                         minLoss = aveLoss;
                         optimalParaValue = C;
-                        disp(['C:',num2str(optimalParaValue),' Loss:',num2str(minLoss)]);
                 end
             end   
         elseif(strcmp(parameterName,'KernelScale'))
@@ -49,10 +49,32 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 3;
+                disp(['Sigma:',num2str(sigma),' Loss:',num2str(aveLoss)]);
                 if aveLoss < minLoss
                         minLoss = aveLoss;
-                        optimalParaValue = sigma;
-                        disp(['Sigma:',num2str(optimalParaValue),' Loss:',num2str(minLoss)]);
+                        optimalParaValue = sigma;       
+                end
+            end
+            for sigma = optimalParaValue - 5 : optimalParaValue + 5
+                totalLoss = 0;
+                for i = 1 : 3
+                    test_set = (indices == i);
+                    train_set = ~test_set;
+                    test_inputs = inputs(test_set,:);
+                    test_labels = labels(test_set,:);
+                    train_inputs = inputs(train_set,:);
+                    train_labels = labels(train_set,:);
+                    svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','RBF','KernelScale',sigma);
+                    %Calculate the classification loss for the trained
+                    %model
+                    L = ClassificationLoss(svmMdl,test_inputs,test_labels);
+                    totalLoss = totalLoss + L;
+                end
+                aveLoss = totalLoss / 3;
+                disp(['Sigma:',num2str(sigma),' Loss:',num2str(aveLoss)]);
+                if aveLoss < minLoss
+                        minLoss = aveLoss;
+                        optimalParaValue = sigma;       
                 end
             end
         end 
@@ -69,17 +91,17 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
                     test_labels = labels(test_set,:);
                     train_inputs = inputs(train_set,:);
                     train_labels = labels(train_set,:);
-                    svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','polynomial','BoxConstraint',C);
+                    svmMdl = fitcsvm(train_inputs,train_labels,'KernelFunction','polynomial','BoxConstraint',C,'polynomialOrder',1);
                     %Calculate the classification loss for the trained
                     %model
                     L = ClassificationLoss(svmMdl,test_inputs,test_labels);
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 3;
+                disp(['C:',num2str(C),' Loss:',num2str(aveLoss)]);
                 if aveLoss < minLoss
                         minLoss = aveLoss;
                         optimalParaValue = C;
-                        disp(['C:',num2str(optimalParaValue),' Loss:',num2str(minLoss)]);
                 end
             end   
         elseif(strcmp(parameterName,'PolynomialOrder'))
@@ -99,10 +121,10 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
                     totalLoss = totalLoss + L;
                 end
                 aveLoss = totalLoss / 3;
+                disp(['Order:',num2str(g),' Loss:',num2str(aveLoss)]);
                 if aveLoss < minLoss
                         minLoss = aveLoss;
                         optimalParaValue = g;
-                        disp(['Order:',num2str(optimalParaValue),' Loss:',num2str(minLoss)]);
                 end
             end
         end 

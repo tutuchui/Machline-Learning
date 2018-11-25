@@ -10,6 +10,7 @@ indices = crossvalind('Kfold', targets,10);
 recallSet = zeros(10,1);
 precisionSet = zeros(10, 1);
 fscoreSet = zeros(10, 1);
+accuracySet = zeros(10,1);
 for i =1:10
     %select training and test sets for crossvalidation
     test_set = (indices == i);
@@ -23,8 +24,8 @@ for i =1:10
     tree = decisionTreeLearning(train_inputs, train_targets,validFeatureNo);
     
     %feed the test data through the tree
-    [cmat,recall,precision,fscore,missclassifiedNode] = evaluateDecisionTree(test_inputs,test_targets,tree);
-    
+    [cmat,recall,precision,fscore,missclassifiedNode,accuracy] = evaluateDecisionTree(test_inputs,test_targets,tree);
+    accuracySet(i,1) = accuracy;
     %create confusion matrix and fscorei
     recallSet(i,1) = recall;
     precisionSet(i,1) = precision;

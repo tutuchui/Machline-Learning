@@ -2,41 +2,48 @@ load('facialPoints.mat');
 load('labels.mat');
 inputs = transpose(reshape(points,132,150));
 [inputs, labels] = shuffleMatrix(inputs, labels);
-indicies = zeros(length(inputs), 1);
-index = 1;
+indices = crossValIndices(labels,10);
 % error = zeros(10, 1);
-classificationRate = zeros(10, 1);
-
-for i=1:length(inputs)
-    indicies(i, 1) = index;
-    index = index + 1;
-    if (index == 11)
-        index = 1;
-    end
+LinerClassificationRate = zeros(10, 1);
+RBFClassificationRate = zeros(10,1);
+PolyClassificationRate = zeros(10,1);
+%
+for i =1:10
+    %select training and test sets for crossvalidation
+    test_set = (indices == i);
+    train_set = ~test_set;
+    test_inputs = inputs(test_set,:);
+    train_inputs = inputs(train_set,:);
+    test_targets = labels(test_set,:);
+    train_targets = labels(train_set,:);   
+    %train the SVM using innerfold-cross validation
+    Mdl = fitcsvm(train_inputs,train_targets,'Kernelfunction', 'linear','BoxConstraint',1);
+    accuracy = 1 - ClassificationLoss(Mdl,test_inputs,test_targets);
+    LinerClassificationRate(i,1) = accuracy;        
 end
 
 for i =1:10
     %select training and test sets for crossvalidation
     test_set = (indices == i);
     train_set = ~test_set;
-    test_inputs = inputs(:,test_set);
-    train_inputs = inputs(:,train_set);
-    test_targets = labels(:,test_set);
-    train_targets = labels(:,train_set);
-    
-    %train the SVM using innerfold-cross validation
-    Mdl = fitcsvm(train_inputs,train_targets,'Kernal function', 'linear','KernalScale',best_sigma,'BoxConstraint', best_c);
-    
-    outputs = predict(Mdl, test_inputs);
-    
-%     error(i,1) = (1/2*(length(test_targets))*(outputs - test_targets)^2;
-    correct = 0;
-    for j = 1:length(test_inputs)
-        if (test_targets(j,1) == outputs(j,1))
-            correct = correct + 1;
-        end
-    end
-    
-    classificationRate(i,1) = correct/(length(test_targets));    
-    
+    test_inputs = inputs(test_set,:);
+    train_inputs = inputs(train_set,:);
+    test_targets = labels(test_set,:);
+    train_targets = labels(train_set,:);   
+    Mdl = fitcsvm(train_inputs,train_targets,'Kernelfunction', 'RBF','BoxConstraint',100.001,'KernelScale',30.001);
+    accuracy = 1 - ClassificationLoss(Mdl,test_inputs,test_targets);
+    RBFClassificationRate(i,1) = accuracy;        
+end
+
+for i =1:10
+    %select training and test sets for crossvalidation
+    test_set = (indices == i);
+    train_set = ~test_set;
+    test_inputs = inputs(test_set,:);
+    train_inputs = inputs(train_set,:);
+    test_targets = labels(test_set,:);
+    train_targets = labels(train_set,:);   
+    Mdl = fitcsvm(train_inputs,train_targets,'Kernelfunction', 'polynomial','BoxConstraint',0.001,'PolynomialOrder',1);
+    accuracy = 1 - ClassificationLoss(Mdl,test_inputs,test_targets);
+    PolyClassificationRate(i,1) = accuracy;        
 end
