@@ -58,7 +58,7 @@ for i =1:10
     bestC_polys(i,:) = bestC_poly;
     bestOrders = bestPoly;
     Mdl = fitcsvm(train_inputs,train_targets,'Kernelfunction', 'polynomial','BoxConstraint',bestC_poly,'PolynomialOrder',bestPoly);
-    rbf_poly(i,:) = size(Mdl.SupportVectors,1) / size(train_inputs,1);
+    poly_a(i,:) = size(Mdl.SupportVectors,1) / size(train_inputs,1);
     accuracy = 1 - ClassificationLoss(Mdl,test_inputs,test_targets);
     PolyClassificationRate(i,1) = accuracy;        
 end

@@ -39,9 +39,9 @@ for i =1:10
     test_targets = labels(test_set,:);
     train_targets = labels(train_set,:);
     disp(['time: ',num2str(i)]);
-    bestC_rbf = RegressionInnerCrossVal(train_inputs,train_outputs,'RBF','BoxConstraint');
-    bestSigma = RegressionInnerCrossVal(train_inputs,train_outputs,'RBF','KernelScale');
-    bestEpsilon_rbf = RegressionInnerCrossVal(train_inputs,train_outputs,'RBF','Epsilon');
+    bestC_rbf = RegressionInnerCrossVal(train_inputs,train_targets,'RBF','BoxConstraint');
+    bestSigma = RegressionInnerCrossVal(train_inputs,train_targets,'RBF','KernelScale');
+    bestEpsilon_rbf = RegressionInnerCrossVal(train_inputs,train_targets,'RBF','Epsilon');
     bestC_rbfs(i,:) = bestC_rbf;
     bestSigmas(i,:) = bestSigma;
     bestEpsilons_rbf(i,:) = bestEpsilons_rbf;
@@ -61,13 +61,13 @@ for i =1:10
     train_targets = labels(train_set,:);
     %train the SVM using innerfold-cross validation
     disp(['time: ',num2str(i)]);
-    bestC_poly = RegressionInnerCrossVal(train_inputs,train_outputs,'polynomial','BoxConstraint');
-    bestQ = RegressionInnerCrossVal(train_inputs,train_outputs,'polynomial','PolynomialOrder');
-    bestEpsilon_poly = RegressionInnerCrossVal(train_inputs,train_outputs,'polynomial','Epsilon');
+    bestC_poly = RegressionInnerCrossVal(train_inputs,train_targets,'polynomial','BoxConstraint');
+    bestQ = RegressionInnerCrossVal(train_inputs,train_targets,'polynomial','PolynomialOrder');
+    bestEpsilon_poly = RegressionInnerCrossVal(train_inputs,train_targets,'polynomial','Epsilon');
     bestC_polys(i,:) = bestC_poly;
     bestOrders(i,:) = bestQ;
     bestEpsilons_poly(i,:) = bestEpsilon_poly;
     Mdl = fitrsvm(train_inputs,train_targets,'Kernelfunction', 'polynomial','Epsilon',bestEpsilon_poly,'BoxConstraint', bestC_poly,'PolynomialOrder',bestQ);
-    rbf_a(i,:) = size(Mdl.SupportVectors,1) / size(train_inputs,1);
+    poly_a(i,:) = size(Mdl.SupportVectors,1) / size(train_inputs,1);
     PolyRMSE(i,1) = MeanSquareError(Mdl,test_inputs,test_targets);  
 end
