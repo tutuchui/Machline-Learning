@@ -5,7 +5,7 @@ function optimalParaValue = ClassificationInnerCrossVal(inputs,labels,kernelName
     % The range of BoxConstraint is 2^-5 to 2^10, ratio is root 2    
     GridC = 1e-3 : 100 : 500 + 1e-3;
     GridSigma = 1e-3 : 10 : 100;
-    GridPoly = 1 : 1 : 10;  
+    GridPoly = 1 : 1 : 3;  
     % if the kernelFunction is RBF. 
     if(strcmp(kernelName,'RBF'))
         minLoss = inf;

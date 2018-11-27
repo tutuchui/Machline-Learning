@@ -7,9 +7,9 @@ indices = crossvalind('Kfold',labels,3);
 % The range of polynomial order is 1 to 10 and step is 1;
 % The range of kernel scale sigma is 1e-3 to 100, step is 10;
 GridC = 1e-3 : 100 : 500 + 1e-3;
-GridEpsilon = 0.1 : 0.2 : 2;
-GridSigma = 1e-3 : 10 : 100;
-GridPoly = 1 : 1 : 10;
+GridEpsilon = 0.1 : 0.3 : 2;
+GridSigma = 1e-3 : 20 : 100 + 1e-3;
+GridPoly = 1 : 1 : 3;
 % if the kernelFunction is RBF.
 if(strcmp(kernelName,'RBF'))
     minLoss = inf;
@@ -38,7 +38,7 @@ if(strcmp(kernelName,'RBF'))
                 optimalParaValue = C;
             end
         end
-        for C = optimalParaValue - 20 : 5 : optimalParaValue + 20
+        for C = optimalParaValue - 10 : 5 : optimalParaValue + 10
              totalMSE = 0;
              for i = 1 : 3
                 test_set = (indices == i);
@@ -85,7 +85,7 @@ if(strcmp(kernelName,'RBF'))
                 optimalParaValue = sigma;
             end
         end
-        for sigma = optimalParaValue - 5 : optimalParaValue + 5
+        for sigma = optimalParaValue - 5 : 2 : optimalParaValue + 5
             totalMSE = 0;
             for i = 1 : 3
                 test_set = (indices == i);
